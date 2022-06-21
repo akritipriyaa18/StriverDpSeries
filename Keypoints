@@ -1,0 +1,27 @@
+IDENTIFICATION OF RECURSIVE PROBLEMS:
+->Trying all possible ways
+->If it's a recursive problem, it will be of two types:
+  1. Count no of ways.
+  2. Min/Max Output.
+
+
+RULE TO WRITE RECURRENCE:-
+1. Express in terms of indexs.
+2. Do all possible stufs acc to problem statement.
+3. Sum of all stuffs ---> Count all ways //////  Max / Min of all stuffs ----> Find min/ max
+4. Base case
+
+
+If overlapping subproblems ----> memoization 
+
+RULE TO WRITE MEMOIZED CODE:
+1. Initialize dp array of size + 1.
+2. Store results in dp array.
+3. Check if dp array stores the result we are searching for , if yes return.
+
+To decrease space complexity ----> Tabulation
+
+RULE TO WRITE TABULATION CODE:
+1. Declare the dp array of same size.
+2. Base cases
+3. Form the nested loops ---> in opposite fashion of memoized code
