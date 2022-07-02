@@ -1,0 +1,132 @@
+Problem Link : https://www.codingninjas.com/codestudio/problems/ninja-s-training_3621003?source=youtube&campaign=striver_dp_videos&utm_source=youtube&utm_medium=affiliate&utm_campaign=striver_dp_videos
+
+You are given a 2D array of size N*3 ‘POINTS’ with the points corresponding to each day and activity. 
+Your task is to calculate the maximum number of merit points that Ninja can earn.
+
+* Why greedy will fail??
+-> Suppose
+        10   50   1   ----> Day 1
+         5  100  11   ----> Day 2
+         
+         Greedily ---> 50 at day 1 then we can't take 100 at day 2 as we can't do same activity on next day , so total will be ---> 50 + 11 = 61
+       
+   
+IDENTIFICATION OF RECURSIVE PROBLEMS:
+->Trying all possible ways
+->If it's a recursive problem, it will be of two types:
+  1. Count no of ways.
+  2. Min/Max Output.
+
+
+RULE TO WRITE RECURRENCE:-
+1. Express in terms of indexs. ---> f(ind , last)
+2. Do all possible stufs acc to problem statement.
+3. Sum of all stuffs ---> Count all ways //////  Max / Min of all stuffs ----> Find min/ max
+4. Base case
+
+index --> we should know what activity we did on the last day, so indices will be f(day , last_activity)
+
+f(n - 1 , 3) --> maxm merit points earned till n - 1 days
+ 
+ 
+ //Recursive Code
+ f(day , last)
+ {
+   if(ind == 0)
+   {
+     maxi = 0;
+     for(i = 0 -> n)
+     {
+       if(i != last)
+       maxi = max(maxi , task[0][i];
+       
+       return maxi;
+     }
+    
+   maxi = 0;
+   for(i = 0 -> n){
+   if(i != last)
+    points += task[day][i] + f(day - 1 , i);
+    
+   maxi = max(maxi , points)
+  }
+  return maxi;
+  
+  }
+  
+  TC ---> 
+  SC ---> O(n)
+  
+  //Memoized code
+  int ninja(int day , int last , vector<vector<int>>& points , vector<vector<int>>& dp)
+  {
+    if(day == 0)
+    {
+        int maxi = 0;
+        for(int i = 0; i < 3; i++)
+        {
+            if(i != last)
+            {
+                maxi = max(maxi , points[0][i]);
+            }     
+        }
+        return maxi;
+    }
+    
+    if(dp[day][last] != -1)  return dp[day][last];
+    
+    int maxi = 0;
+    for(int i = 0; i < 3; i++)
+    {
+        if(i != last)
+        {
+              int point = points[day][i] + ninja(day - 1 , i , points , dp);
+              maxi = max(maxi , point);
+        }
+    }
+    return dp[day][last] = maxi;
+}
+
+int ninjaTraining(int n, vector<vector<int>> &points)
+{
+    // Write your code here.
+    vector<vector<int>>dp(n , vector<int>(4 , -1));
+    return ninja(n - 1 , 3 , points , dp);
+}
+
+TC ---> O(n * 4) * 3
+SC ---> O(N) + O(N)
+
+//Tabulation Code
+int ninjaTraining(int n, vector<vector<int>> &points)
+{
+    // Write your code here.
+    vector<vector<int>>dp(n , vector<int>(4 , 0));
+    
+    dp[0][0] = max(points[0][1] , points[0][2]);
+    dp[0][1] = max(points[0][0] , points[0][2]);
+    dp[0][2] = max(points[0][0] , points[0][1]);
+    dp[0][3] = max(points[0][0] , max(points[0][1] , points[0][2]));
+    
+    int maxi = 0;
+    for(int day = 1; day < n; day++)
+    {
+        for(int last = 0; last < 4; last++)
+        {
+             dp[day][last] = 0;
+            for(int task = 0; task < 3; task++)
+            {
+                if(task != last)
+                {
+                    int point = points[day][task] + dp[day - 1][task];
+                    dp[day][last] = max(dp[day][last] , point);
+                }
+            }
+        }
+    }
+    return dp[n - 1][3];
+}
+
+TC --> O(N * 4 * 3)
+SC -> O(N * 4)
+
