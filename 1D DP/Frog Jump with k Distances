@@ -1,0 +1,98 @@
+--> It's a find min / max problem
+
+Understanding Problem :
+If n = 3 , frog can jump k steps and energy lost in jumping is height[j] - height[i]
+It will look like this :
+steps ------> 10 -> 20 -> 30 -> 10
+Energy lost->    10     10    20
+
+steps ------> 10 -> 20 --> 10     
+Energy lost->    10     10       ----> minimum energy lost
+
+steps ------> 10 --> 30 -> 10
+Energy lost->    20     20
+
+This is TRYING ALL POSSIBLE WAYS which means RECURSION.
+
+According to rules
+ACC TO RULES OF RECURRENCE:-
+1. Express in terms of indexs. ---> f(n)
+2. Do all possible stufs acc to problem statement.
+3. Sum of all stuffs ---> Count all ways //////  Max / Min of all stuffs ----> Find min/ max
+4. Base case
+
+
+f(n) ---> minmimum energy req. to reach n from 0 index.
+
+CODE:
+
+   f(ind)
+   {
+     if(ind == 0)
+     return 0;
+     
+     for(int j = 1; j <= k; j++)
+     {
+        if(ind - j >= 0)
+        jump = f(ind - j) + abs(a[ind] + a[ind - j]);
+        minSteps = min(minSteps , jump);
+     }
+    TC -> 
+    SC ->
+
+    Recursive Tree:
+
+                                f(3)
+                               /    \
+                           f(2)      f(1)
+                          /    \     /   \
+                         f(1)  f(0) f(0)  f(-1)
+
+
+   -----> We can clearly see overlapping subproblems. So memoization comes in action.
+
+   CODE:
+   int f(int n , vector<int>&heights , int dp[])
+   {
+       if(n == 0)
+        return 0;
+        
+      if(dp[n] != -1)
+        return dp[n];
+        
+     for(int j = 1; j <= k; j++){
+     if(ind - j >= 0)
+     int left = f(n - j , heights , dp) + abs(heights[n] - heights[n - j]);
+     return dp[n] = min(dp[n] , left);
+   }
+   int frogJump(int n, vector<int> &heights)
+   {
+    int dp[n + 1];
+    memset(dp , -1 , sizeof(dp));
+    return f(n - 1 , heights , dp);
+  }
+
+    TC --> O(N)
+    SC --> O(N) ---> Recursive stack space + O(N) ---> Dp array
+
+
+    To decrease space complexity , Tabulation(Bottom - up Approach):
+
+    int frogJump(int n, vector<int> &heights)
+{
+    vector<int>dp(n , 0);
+    dp[0] = 0;
+    
+    for(int i = 1; i < n; i++)
+    {
+        for(int j = 0; j <= k; j++){
+        if(ind - j >= 0)
+        int left = dp[i - j] + abs(heights[i] - heights[i - j]);
+        dp[i] = min(left , dp[i]);
+    }
+    
+    return dp[n - 1];
+}
+
+    TC --> O(N)
+    SC --> O(N) -->Dp array
