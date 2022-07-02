@@ -1,0 +1,89 @@
+Problem Link: https://www.codingninjas.com/codestudio/problems/maximum-sum-of-non-adjacent-elements_843261?source=youtube&campaign=striver_dp_videos&utm_source=youtube&utm_medium=affiliate&utm_campaign=striver_dp_videos
+
+
+IDENTIFICATION OF RECURSIVE PROBLEMS:
+->Trying all possible ways
+->If it's a recursive problem, it will be of two types:
+  1. Count no of ways.
+  2. Min/Max Output.
+  
+  Problem:
+  return the maximum sum of the subsequence with the constraint that no two elements are adjacent in the given array/list.
+  
+  Subsequences:
+  ->Pick 
+  ->Not_Pick
+  
+  RULE TO WRITE RECURRENCE:-
+1. Express in terms of indexs. ---> f(i) ---> maximum sum till i
+2. Do all possible stufs acc to problem statement.
+3. Max of all stuffs ----> Find min/ max
+4. Base case
+
+
+//Recursive Code:
+int subsequences(vector<int>&nums , int ind)
+{
+    if(ind == 0) return nums[ind];
+    if(ind < 0) return 0;
+    
+    int pick = nums[ind] + subsequences(nums , ind - 2);
+    int non_pick = 0 + subsequences(nums , ind - 1);
+    
+    return max(pick , non_pick);
+}
+int maximumNonAdjacentSum(vector<int> &nums){
+    // Write your code here.
+    return subsequences(nums , nums.size() - 1);
+}
+
+TC ---> O(2^n)
+SC ---> O(n)
+
+//Memoized Code
+#include<bits/stdc++.h>
+int subsequences(vector<int>&nums , int ind , int dp[])
+{
+    if(ind == 0) return nums[ind];
+    if(ind < 0) return 0;
+    
+    if(dp[ind] != -1)
+        return dp[ind];
+    
+    int pick = nums[ind] + subsequences(nums , ind - 2 , dp);
+    int non_pick = 0 + subsequences(nums , ind - 1 , dp);
+    
+    return dp[ind] = max(pick , non_pick);
+}
+int maximumNonAdjacentSum(vector<int> &nums){
+    // Write your code here.
+    int n = nums.size();
+    int dp[n + 1];
+    memset(dp , -1 , sizeof(dp));
+    return subsequences(nums , nums.size() - 1 , dp);
+}
+
+TC ---> O(n)
+SC ---> O(n)--> Aux Space + O(n) --> Stack Space
+
+//Tabulation Code
+int maximumNonAdjacentSum(vector<int> &nums){
+    // Write your code here.
+    int n = nums.size();
+    int dp[n];
+    dp[0] = nums[0];
+    
+    for(int i = 1; i < n; i++)
+    {
+        int pick = nums[i];
+        if(i > 1)
+            pick += dp[i - 2];
+        
+        int non_pick = 0 + dp[i - 1];
+        dp[i] = max(pick , non_pick);
+    }
+    return dp[n - 1];
+}
+
+TC ---> O(n)
+SC ---> O(n) --> dp array
